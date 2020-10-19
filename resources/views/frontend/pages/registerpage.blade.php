@@ -7,7 +7,7 @@
 
     <!-- You only need this form and the form-register.css -->
 
-    <form class="form-register" method="post" action="{{route('add-user')}}">
+    <form class="form-register" method="post" action="{{route('create-user')}}">
         @csrf
 
         <div class="form-register-with-email">
@@ -47,7 +47,7 @@
 
 
 <div class="mb">
-                    <label for=""> <input type="checkbox" class="uk-checkbox" name="checkbox" checked>
+                    <label for=""> <input type="checkbox" class="uk-checkbox" name="checkbox">
                    I agree to the <a href="#">terms and conditions</a></label>
 
 </div>
@@ -68,9 +68,8 @@
                 <span class="form-title">Sign in with</span>
             </div>
 
-            <a href="#" class="form-google-button">Google</a>
+            <a href="{{route('gmail-signin','google')}}" class="form-google-button">Google</a>
             <a href="#" class="form-facebook-button">Facebook</a>
-            <a href="#" class="form-twitter-button">Twitter</a>
 
         </div>
 

@@ -33,6 +33,7 @@
                                         <th>Stock</th>
                                         <th>Actual Price</th>
                                         <th>Selling Price</th>
+                                        <th>Deal of the day</th>
                                         <th>Created at</th>
                                         <th class="sorting-false">Action</th>
                                     </tr>
@@ -48,16 +49,33 @@
                                             <td>{{$value->stocks->stock_availability==1 ? 'In stock'.'('.$value->stocks->quantity.')':'Out of stock'}}</td>
                                             <td>{{$value->price}}</td>
                                             <td>{{$value->selling_price}}</td>
+                                            <td>
+                                                <form method="post" action="{{route('deal-status')}}">
+                                                    <input type="hidden" name="deal" value="{{$value->id}}">
+                                                    @csrf
+                                                @if(($value->is_special)==0)
+                                                <button class="btn btn-danger btn btn-sm" name="inactive"><i
+                                                            class="fa fa-times"></i>
+                                                </button>
+                                            @else
+                                                <button class="btn btn-success btn btn-sm" name="active"><i
+                                                            class="fa fa-check"></i>
+                                                </button>
+                                            @endif
+                                        </td>
 
                                             <td>{{\Illuminate\Support\Carbon::now()}}</td>
                                             <td>
-                                                <a class="btn btn-danger confirm"
-                                                   href="{{route('delete-category',$value->id)}}"
+                                                <a class="btn btn-outline-danger confirm"
+                                                   href="{{route('delete-product',$value->id)}}"
                                                    onclick="return confirm('Confirm Delete?')"><i
-                                                            class="fa fa fa-trash"></i>Delete </a>
-                                                <a class="btn btn-outline-primary confirm"
-                                                   href="{{route('edit-category',$value->id)}}"
-                                                ><i class="fa fa fa-edit"></i>Edit </a>
+                                                            class="fa fa fa-trash"></i></a>
+                                                <a class="btn btn-sm btn-outline-primary confirm"
+                                                   href="{{route('edit-product',$value->id)}}"
+                                                ><i class="fa fa fa-edit"></i></a>
+                                                <a class="btn btn-sm btn-outline-primary confirm"
+                                                   href="{{route('edit-product',$value->id)}}"
+                                                ><i class="fa fa fa-eye"></i></a>
                                             </td>
                                         </tr>
                                     @endforeach

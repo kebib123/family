@@ -80,13 +80,6 @@ class EloquentCategoryRepository extends AbstractRepository implements CategoryR
 
     }
 
-    public function update( $id, array $attributes ) {
-        $category = $this->getById( $id );
-        $category->update( $attributes );
-
-        return $category;
-
-    }
 
 
 }

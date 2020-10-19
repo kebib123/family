@@ -16,7 +16,7 @@ class CreateDescriptionsTable extends Migration
         Schema::create('descriptions', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('product_id')->unsigned();
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->string('title');
             $table->longText('description');
             $table->timestamps();

@@ -83,35 +83,6 @@
                                                     <input class="form-control" name="link" type="text" id="name">
                                                 </div>
                                             </div>
-                                        {{--<div class="col-sm-4">--}}
-                                            {{--<div class="form-group ">--}}
-                                                {{--<label for="product" class="control-label">Choose Your--}}
-                                                    {{--Product*</label>--}}
-                                                {{--<select class="form-control" name="product" id="product"--}}
-                                                        {{--placeholder="Choose Product">--}}
-                                                    {{--<option selected disabled>Please Choose Product</option>--}}
-                                                    {{--@foreach($product as $value)--}}
-                                                        {{--<option value="{{$value->id}}">{{$value->productname}}</option>--}}
-                                                    {{--@endforeach--}}
-                                                {{--</select>--}}
-                                            {{--</div>--}}
-                                        {{--</div>--}}
-                                        {{--<div class="col-sm-4">--}}
-                                            {{--<div class="form-group mb-none">--}}
-                                                {{--<label for="parent" class="control-label">Choose Your--}}
-                                                    {{--Category*</label>--}}
-                                                {{--<select name="parent_id" id="parent" class="form-control select2">--}}
-                                                    {{--<option value="0">Select Parent Category</option>--}}
-                                                    {{--@foreach($categorycomp as $value)--}}
-                                                        {{--<option value="{{$value->id}}">{{$value->name}}</option>--}}
-                                                        {{--@include('backend.pages.category.category_dropdown',['category'=>$value])--}}
-                                                    {{--@endforeach--}}
-
-
-                                                {{--</select>--}}
-
-                                            {{--</div>--}}
-                                        {{--</div>--}}
 
                                     </div>
                                 </div>
@@ -162,7 +133,7 @@
                                 <th>Slide Name</th>
                                 <th>Section</th>
                                 <th>Status <br>
-                                    <small>(Click to Unpublish)</small>
+                                    <small>(Click to change status)</small>
                                 </th>
                                 <th>Action</th>
                             </tr>

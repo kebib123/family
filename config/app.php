@@ -164,6 +164,9 @@ return [
         Unisharp\Ckeditor\ServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Gloudemans\Shoppingcart\ShoppingcartServiceProvider::class,
+        Laravel\Socialite\SocialiteServiceProvider::class,
+        Cartalyst\Sentinel\Laravel\SentinelServiceProvider::class,
+
 
 
 
@@ -243,6 +246,11 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Cart' => Gloudemans\Shoppingcart\Facades\Cart::class,
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'Reminder'   => Cartalyst\Sentinel\Laravel\Facades\Reminder::class,
+        'Sentinel'   => Cartalyst\Sentinel\Laravel\Facades\Sentinel::class,
+
+
 
 
 

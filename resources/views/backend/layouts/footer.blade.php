@@ -17,12 +17,12 @@
 <script src="{{url('js/app.js')}}"></script>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#example').DataTable();
-    } );
-    $(document).ready(function() {
+    });
+    $(document).ready(function () {
         $('#example-1').DataTable();
-    } );
+    });
 </script>
 
 <script src="{{url('js/adminlte.min.js')}}"></script>
@@ -41,12 +41,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <script>
     @if(\Illuminate\Support\Facades\Session::has('success'))
-      toastr.success("{{Session::get('success')}}");
+    toastr.success("{{Session::get('success')}}");
     @endif
     @if(\Illuminate\Support\Facades\Session::has('error'))
     toastr.error("{{Session::get('error')}}");
     @endif
-
-
 
 </script>

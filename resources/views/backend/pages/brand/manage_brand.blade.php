@@ -23,12 +23,12 @@
                             <div class="form-group">
                                 <label for="formGroupExampleInput">Brand Name:</label>
                                 <input type="text" name="brand_name" class="form-control" id="formGroupExampleInput"
-                                       placeholder="enter product name">
+                                       placeholder="enter brand name">
                             </div>
                             <div class="form-group">
                                 <label for="formGroupExampleInput">Company Name:</label>
                                 <input type="text" name="company_name" class="form-control" id="formGroupExampleInput"
-                                       placeholder="enter product price">
+                                       placeholder="enter company name">
                             </div>
                             <div class="form-group">
                                 <label for="formGroupExampleInput">Status:</label>
@@ -67,7 +67,9 @@
                         <th>Image</th>
                         <th>Brand Name</th>
                         <th>Company Name</th>
-                        <th>Status</th>
+                        <th>Status<br>
+                        <small>(Click to change status)</small>
+                        </th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -78,7 +80,22 @@
                             <td><img src="{{url('images/brands/'.$value->brand_image)}}" width="100px"></td>
                             <td>{{$value->brand_name}}</td>
                             <td>{{$value->company_name}}</td>
-                            <td>{{$value->status}}</td>
+                            <td>
+                                <form method="post" action="{{route('brand-status')}}">
+                                    <input type="hidden" name="brand" value="{{$value->id}}">
+                                    @csrf
+                                    @if(($value->status)==0)
+                                        <button class="btn btn-danger btn btn-sm" name="inactive"><i
+                                                    class="fa fa-times"></i>
+                                        </button>
+                                    @else
+                                        <button class="btn btn-success btn btn-sm" name="active"><i
+                                                    class="fa fa-check"></i>
+                                        </button>
+                                    @endif
+
+                                </form>
+                            </td>
                             <td>
                                 <a class="btn btn-danger confirm"
                                    href="{{route('delete-brand',$value->id)}}"

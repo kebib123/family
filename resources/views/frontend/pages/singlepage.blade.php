@@ -2,10 +2,6 @@
 @section('content')
 
 
-
-    <!-- The whole page content goes here -->
-
-
     <!--  single page -->
     <section id="single_page">
         <div class="container">
@@ -67,38 +63,30 @@
                                 <div class="heading">
                                     <h4>Colors</h4>
                                 </div>
-                                <div class="radio-item">
-                                    <input type="radio" id="ritema" name="ritem" value="ropt1">
-                                    @foreach($colour as $value)
-                                        <label for="ritema" style="background-color:{{$value}}"></label>
-                                    @endforeach
 
-                                </div>
+                                @foreach($colour as $value)
+                                    <div class="radio-item">
+                                        <input type="radio" id="{{$value}}" name="ritem" value="{{$value}}">
 
-                                {{--<div class="radio-item">--}}
-                                {{--<input type="radio" id="ritemb" name="ritem" value="ropt2">--}}
-                                {{--<label for="ritemb" style="background-color: black"></label>--}}
-                                {{--</div>--}}
-                                {{--<div class="radio-item">--}}
-                                {{--<input type="radio" id="ritemc" name="ritem" value="ropt3">--}}
-                                {{--<label for="ritemc" style="background-color: blue"></label>--}}
-                                {{--</div>--}}
-                                {{--<div class="radio-item">--}}
-                                {{--<input type="radio" id="ritemd" name="ritem" value="ropt4">--}}
-                                {{--<label for="ritemd" style="background-color: yellow"></label>--}}
-                                {{--</div>--}}
+                                        <label for="{{$value}}" style="background-color:{{$value}}"></label>
+                                    </div>
+                                @endforeach
+
 
                             </div>
 
                             <div class="product_short_info-buttons">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="btn_add-to-cart">
-
                                         <button type="submit" class=" uk-button view-cart">Add to Cart</button>
                                     </div>
-                                    <div class=" btn_add-to-wishlist">
-                                        <button class=" uk-button checkout">Add To Wishlist</button>
-                                    </div>
+                                    @if(Auth::check())
+                                        <div class=" btn_add-to-wishlist">
+                                            <a class=" uk-button checkout"
+                                               href="{{route('wishlist',[Auth::user()->id,$show->id])}}">Add To
+                                                Wishlist</a>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
 
@@ -156,12 +144,30 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link " href="#tab-reviews" role="tab" data-toggle="tab"
-                               aria-expanded="false">Reviews (1)</a>
+                               aria-expanded="false">Reviews ({{count($review)}})</a>
                         </li>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane fade show active description " id="tab-description">
-                            <h3>{{$description->first()}}</h3>
+                            <table class="table  table-striped ">
+                                <tbody>
+                                <tr>
+                                    <td colspan="60" style="font-weight: bold;">
+                                        <p><span>Technical Speciﬁcation</span></p></td>
+                                </tr>
+                                @foreach($description as $value)
+                                    <tr>
+                                        <td colspan="18"><p><span>Title</span></p></td>
+                                        <td colspan="42"><p><span>Description</span></p></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="18"><p><span>{{$value->title}}</span></p></td>
+                                        <td colspan="42"><p><span>{{$value->description}}</span></p></td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+
                         </div>
                         <div role="tabpanel" class="tab-pane fade itinerary_tab " id="tab-information">
                             {!! $information->first() !!}
@@ -216,13 +222,15 @@
                                     <label for="comment">write something</label>
                                     <textarea type="text" name="comment" class="form-control" id="comment"
                                               placeholder="write something" rows="3" cols="100">
-                    </textarea>
+                                    </textarea>
                                     <button class="btn-view_more float-right mt-1 " href=""> comment</button>
                                     <div class="clearfix"></div>
                                 </form>
 
                                 <div class="clearfix"></div>
-                                <p class="review-user">4.1 average based on 254 reviews.</p>
+                                @if($review->isnotempty())
+                                    <p class="review-user">{{$average}} average based on {{count($review)}} reviews.</p>
+                                @endif
                                 <hr style="border:3px solid #f1f1f1; width:70%">
                                 <div class="row review-rating">
                                     <div class="side">
@@ -230,60 +238,61 @@
                                     </div>
                                     <div class="middle">
                                         <div class="bar-container">
-                                            <div class="bar-5"></div>
+                                            <div class="bar-{{count($fivestar)}}"></div>
                                         </div>
                                     </div>
                                     <div class="side right">
-                                        <div>150</div>
+                                        <div>{{count($fivestar)}}</div>
                                     </div>
                                     <div class="side">
                                         <div>4 star</div>
                                     </div>
                                     <div class="middle">
                                         <div class="bar-container">
-                                            <div class="bar-4"></div>
+                                            <div class="bar-{{count($fourstar)}}"></div>
                                         </div>
                                     </div>
                                     <div class="side right">
-                                        <div>63</div>
+                                        <div>{{count($fourstar)}}</div>
                                     </div>
                                     <div class="side">
                                         <div>3 star</div>
                                     </div>
                                     <div class="middle">
                                         <div class="bar-container">
-                                            <div class="bar-3"></div>
+                                            <div class="bar-{{count($threestar)}}"></div>
                                         </div>
                                     </div>
                                     <div class="side right">
-                                        <div>15</div>
+                                        <div>{{count($threestar)}}</div>
                                     </div>
                                     <div class="side">
                                         <div>2 star</div>
                                     </div>
                                     <div class="middle">
                                         <div class="bar-container">
-                                            <div class="bar-2"></div>
+                                            <div class="bar-{{count($twostar)}}"></div>
                                         </div>
                                     </div>
                                     <div class="side right">
-                                        <div>6</div>
+                                        <div>{{count($twostar)}}</div>
                                     </div>
                                     <div class="side">
                                         <div>1 star</div>
                                     </div>
                                     <div class="middle">
                                         <div class="bar-container">
-                                            <div class="bar-1"></div>
+                                            <div class="bar-{{count($onestar)}}"></div>
                                         </div>
                                     </div>
                                     <div class="side right">
-                                        <div>20</div>
+                                        <div>{{count($onestar)}}</div>
                                     </div>
                                 </div>
                                 <div class="review-container">
                                     <h3 class="review-title">Reviews</h3>
                                     @foreach($review as $value)
+
                                         <article class="reviews" style="display: block;">
                                             <figure class="user-image">
                                                 <img src="https://yt3.ggpht.com/-lASduCKYbGI/AAAAAAAAAAI/AAAAAAAAAAA/bCSffOUUASk/s48-c-k-no-mo-rj-c0xffffff/photo.jpg"
@@ -291,13 +300,13 @@
                                             </figure>
                                             <div class="review-right">
                                                 <span class="username">{{$value->name}}</span>&nbsp;<span
-                                                        class="published">{{\Carbon\Carbon::now()}}</span>&nbsp;&nbsp;<span>{{$value->star}}</span>
-                                                <p>{{$value->comment}}</p>
+                                                        class="published">{{\Carbon\Carbon::now()}}</span>&nbsp;&nbsp;<span>I gave {{$value->star}}
+                                                    star</span>
+                                                <p>{{$value->products->comment}}</p>
                                             </div>
                                             <div class="clearfix"></div>
                                         </article>
                                     @endforeach
-
                                     <button class="btn show-more center"> show more</button>
                                     <div class="clearfix"></div>
 

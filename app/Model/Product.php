@@ -16,8 +16,21 @@ class Product extends Model
             ]
         ];
     }
+    public function views()
+    {
+        return $this->morphMany(
+            View::class,
+            'viewable'
+        );
+    }
+
     protected $fillable=['product_name','price','selling_price','discount_percentage','description','color','image','status',
-        'is_featured','is_popular','size','brand_id','category_id'];
+        'is_featured','is_popular','size','brand_id','category_id','is_special'];
+
+    public function getViewsCount()
+    {
+        return $this->views()->count();
+    }
 
     public function categories()
     {
@@ -37,5 +50,15 @@ class Product extends Model
      {
          return $this->hasMany('App\Model\Review','product_id');
      }
+     public function informations()
+     {
+         return $this->hasone('App\Model\Information','product_id');
+     }
+     public function descriptions()
+     {
+         return $this->hasMany('App\Model\Description','product_id');
+     }
+
+
 
 }

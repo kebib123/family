@@ -61,7 +61,6 @@
                                     <option value="grey">grey</option>
                                     <option value="pink">pink</option>
                                     <option value="purple">purple</option>
-                                    <option value="white">white</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -76,7 +75,7 @@
                 <div class="col-md-6">
                     <div class="box box-default">
                         <div class="box-header with-border">
-                            <h6 class="box-title">Status</h6>
+                            <h6 class="box-title">Status:</h6>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
@@ -92,7 +91,7 @@
 
                     <div class="box box-default">
                         <div class="box-header with-border">
-                            <h6 class="box-title">Featured/Unfeatured</h6>
+                            <h6 class="box-title">Featured/Unfeatured:</h6>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
@@ -105,7 +104,7 @@
                             </div>
                         </div>
                         <div class="box-header with-border">
-                            <h6 class="box-title">Popular/Unpopular</h6>
+                            <h6 class="box-title">Popular/Unpopular:</h6>
                         </div>
                         <div class="box-body">
                             <div class="form-group mb-none">
@@ -120,7 +119,7 @@
 
                     <div class="box box-default">
                         <div class="box-header with-border">
-                            <h6 class="box-title">Size</h6>
+                            <h6 class="box-title">Size:</h6>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
@@ -130,8 +129,8 @@
                                     <option value="medium">Medium</option>
                                     <option value="large">Large</option>
                                     <option value="xl">XL</option>
-                                    <option value="xxl">XXL</option>
-                                    <option value="xxxl">XXXL</option>
+                                    <option value="x-x-l">XXL</option>
+                                    <option value="x-x-x-l">XXXL</option>
                                 </select>
 
                             </div>
@@ -174,6 +173,15 @@
 
                             </div>
                         </div>
+                    </div>
+                    <div class="form-group special-link">
+                        <label for="name" class="col-sm-2 col-md-3 control-label">Special:</label>
+                            <select class="form-control" onChange="showSpecial()" name="isSpecial" id="isSpecial">
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            </select>
+                            <span class="help-block" style="font-weight: normal;font-size: 11px;margin-bottom: 0;">
+                                  Choose if this is in deals/special products. Special products belongs to deals.</span>
                     </div>
 
                 </div>

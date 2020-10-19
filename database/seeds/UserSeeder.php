@@ -16,6 +16,7 @@ class UserSeeder extends Seeder
         $data['password']=bcrypt('admin002');
         $data['name']='admin';
         $data['phone']='01421755';
+        $data['verified']='1';
         \App\Model\User::create($data);
     }
 }

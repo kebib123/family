@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Mail\VerifyMail;
+use App\Model\VerifyUser;
 use App\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+
 
 class RegisterController extends Controller
 {
@@ -43,7 +49,7 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
@@ -58,15 +64,66 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return \App\User
      */
-    protected function create(array $data)
+    protected function create(Request $request)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|unique:users,email',
+            'password' => 'required',
+            'checkbox'=>'required'
+            ],
+            [
+                'checkbox.required' => 'Please agree to terms and conditions'
+
         ]);
+        $user = \App\Model\User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'phone' => $request->phone,
+            'roles' => 'user'
+        ]);
+
+        $verifyUser = VerifyUser::create([
+            'user_id' => $user->id,
+            'token' => str_random(40)
+        ]);
+        if ($user && $verifyUser) {
+//            return new VerifyMail($verifyUser->token, $user->id, $user->name);
+            Mail::send(new VerifyMail($verifyUser->token, $user->id, $user->name));
+
+        }
+
+
+//        return User::create([
+//            'name' => $data['name'],
+//            'email' => $data['email'],
+//            'password' => Hash::make($data['password']),
+//        ]);
+        Session::flash('success', 'Please verify your email to complete registration process');
+        return redirect()->back();
     }
+
+    public function verifyUser($token)
+    {
+        $verifyUser = VerifyUser::where('token', $token)->first();
+        if (isset($verifyUser)) {
+            $user = $verifyUser->users;
+            if (!$user->verified) {
+                $verifyUser->users->verified = 1;
+                $verifyUser->users->save();
+                $status = "Your e-mail is verified. You can now login.";
+            } else {
+                $status = "Your e-mail is already verified. You can now login.";
+            }
+        } else {
+            return redirect()->intended(route('signin'))->with('warning', "Sorry your email cannot be identified.");
+        }
+
+        return redirect()->intended(route('signin'))->with('success', $status);
+    }
+
 }

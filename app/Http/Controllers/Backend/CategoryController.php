@@ -19,19 +19,19 @@ class CategoryController extends BackendController
     }
 
 
-
-
     public function add_category(Request $request)
     {
         if ($request->isMethod('get')) {
-            $category = $this->category->getCategories();
             $cat = Category::all();
             $this->data('abc', $cat);
-            $this->data('category', $category);
             $this->data('title', $this->setTitle('Category'));
             return view($this->backendcategoryPath . 'add_category', $this->data);
         }
         if ($request->isMethod('post')) {
+            $request->validate([
+                'name' => 'required',
+                'parent_id' => 'required',
+            ]);
             $data['name'] = $request->name;
             $data['parent_id'] = $request->parent_id;
 
@@ -52,30 +52,27 @@ class CategoryController extends BackendController
 
     }
 
-    public function edit_category($id)
+    public function edit_category(Request $request)
     {
-        $cat = $this->category->getById( $id );
-        return view($this->backendcategoryPath.'category_edit' )->with( [
-            'allCategories' => $this->category->getCategories(),
-            'cat'           => $cat
-        ] );
+        if ($request->isMethod('get')) {
+            $id = $request->id;
+            $cat = Category::where('id', '=', $id)->first();
+            $this->data('edit_cat', $cat);
+            return view($this->backendcategoryPath . 'category_edit', $this->data);
+        }
+        if ($request->isMethod('post')) {
+            $id = $request->id;
+            $data['name'] = $request->name;
+            $data['parent_id'] = $request->parent_id;
+            $new = Category::findorfail($id);
 
-    }
-    public function update_category( Request $request, $id ) {
-        $request->validate(  [
-            'name' => 'required'
-        ] );
+            if ($new->update($data)) {
+                Session::flash('success', 'Categories updated');
+                return redirect()->back();
+            }
 
-        try {
-
-            $this->category->update( $id, $request->all() );
-
-        } catch ( Exception $e ) {
-
-            throw new Exception( 'Error in updating category: ' . $e->getMessage() );
         }
 
-        return redirect()->route('add-category')->with( 'success', 'Category successfully updated!' );
     }
 
 

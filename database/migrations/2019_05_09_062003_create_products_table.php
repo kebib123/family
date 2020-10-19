@@ -18,8 +18,8 @@ class CreateProductsTable extends Migration
             $table->string('product_name');
             $table->string('slug')->nullable();
             $table->string('price');
-            $table->string('selling_price');
-            $table->string('discount_percentage');
+            $table->integer('selling_price');
+            $table->integer('discount_percentage');
             $table->longText('description');
             $table->string('color');
             $table->string('image')->nullable();
@@ -31,6 +31,7 @@ class CreateProductsTable extends Migration
             $table->integer('category_id')->unsigned()->nullable();
             $table->foreign('brand_id')->references('id')->on('brands');
             $table->foreign('category_id')->references('id')->on('categories');
+            $table->boolean('is_special')->default(0);
             $table->timestamps();
         });
     }

@@ -36,7 +36,6 @@
                                             @foreach($cat as $value)
                                                 <option value="{{$value->id}}">{{$value->name}}</option>
                                                 @include('backend.pages.category.category_dropdown',['category'=>$value])
-
                                             @endforeach
                                         </select>
 
@@ -79,11 +78,12 @@
                              <td>{{$value->id}}</td>
                              <td>{{$value->name}}</td>
                              <td>{{App\Model\Category::where('id','=',$value->parent_id)->first() ? App\Model\Category::where('id','=',$value->parent_id)->first()->name : '-'}}</td>
-                             <td>{{\Illuminate\Support\Carbon::now()}}</td>
+{{--                             <td>{{\Illuminate\Support\Carbon::now()}}</td>--}}
+                             <td>{{$value->parent_id}}</td>
                             <td>
                                 <a class="btn btn-danger confirm"
                                    href="{{route('delete-category',$value->id)}}"
-                                   onclick="return confirm('Delete all categories?')"><i
+                                   onclick="return confirm('Confirm Delete?')"><i
                                             class="fa fa fa-trash"></i>Delete </a>
                                 <a class="btn btn-outline-primary confirm"
                                    href="{{route('edit-category',$value->id)}}"

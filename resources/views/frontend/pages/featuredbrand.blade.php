@@ -36,33 +36,42 @@
                                                                          placeholder=""
                                                                          style="background-color: #e6191a">100</span>
                                             </p>
-                                            <input id="range" class="uk-range " type="range" value="2" min="100"
+                                            <input id="range" class="item_filter prices uk-range " type="range" value="" min="100"
                                                    max="10000" step="1"
                                                    oninput="document.getElementById('rangeValue').innerHTML = this.value">
                                         </form>
                                     </div>
                                 </div>
                             </li>
-                            <li>
-                                <a class="uk-accordion-title" href="#"><h5> Brand</h5></a>
-                                <div class="uk-accordion-content brand__filter">
-                                    <form>
-                                        <label><input class="uk-checkbox" type="checkbox" checked> samsung</label>
+                            {{--<li>--}}
+                                {{--<a class="uk-accordion-title" href="#"><h5> Brand</h5></a>--}}
+                                {{--<div class="uk-accordion-content brand__filter">--}}
+                                    {{--@foreach($brand as $value)--}}
+                                        {{--<form>--}}
+                                            {{--<label><input class="item_filter brands uk-checkbox"--}}
+                                                          {{--value="{{$value->brand_name}}"--}}
+                                                          {{--type="checkbox">{{$value->brand_name}}</label>--}}
 
-                                    </form>
-                                </div>
-                            </li>
+                                        {{--</form>--}}
+                                    {{--@endforeach--}}
+                                {{--</div>--}}
+                            {{--</li>--}}
                             <li>
                                 <a class="uk-accordion-title" href="#"><h5> Size</h5></a>
                                 <div class="uk-accordion-content brand__filter">
                                     <form>
-                                        <label><input class="item_filter size uk-checkbox" value="small" type="checkbox"> Small</label>
-                                        <label><input class="item_filter size uk-checkbox" value="medium" type="checkbox"> Medium</label>
-                                        <label><input class="item_filter size uk-checkbox" value="large" type="checkbox"> Large</label>
-                                        <label><input class="item_filter size uk-checkbox" value="xl" type="checkbox"> XL</label>
-                                        <label><input class="item_filter size uk-checkbox" value="xxl" type="checkbox"> XXL</label>
-                                        <label><input class="item_filter size uk-checkbox" value="xxxl" type="checkbox"> XXXL</label>
-
+                                        <label><input class="item_filter size uk-checkbox" value="small"
+                                                      type="checkbox"> Small</label>
+                                        <label><input class="item_filter size uk-checkbox" value="medium"
+                                                      type="checkbox"> Medium</label>
+                                        <label><input class="item_filter size uk-checkbox" value="large"
+                                                      type="checkbox"> Large</label>
+                                        <label><input class="item_filter size uk-checkbox" value="xl" type="checkbox">
+                                            XL</label>
+                                        <label><input class="item_filter size uk-checkbox" value="xxl" type="checkbox">
+                                            XXL</label>
+                                        <label><input class="item_filter size uk-checkbox" value="xxxl" type="checkbox">
+                                            XXXL</label>
                                     </form>
                                 </div>
                             </li>
@@ -86,16 +95,18 @@
                                     <h3>Sort by:</h3>
 
                                 </div>
-                                <select name="" class="uk-select" style="width: 200px">
-                                    <option value="">New</option>
-                                    <option value="">Price</option>
-                                    <option value="">Popular</option>
+                                <select name="" class="item_sort uk-select" style="width: 200px">
+                                    <option selected="selected" value="">--Select--</option>
+                                    <option class="newproduct" value="new">New</option>
+                                    <option class="price" value="price">Price</option>
+                                    <option class="newpopular" value="popular">Popular</option>
+
                                 </select>
                             </div>
 
                         </div>
                     </div>
-                    <div class="product-category white-product">
+                    <div class="product-category white-product" id="filter_id">
 
                         @foreach($pro as $value)
 
@@ -155,3 +166,58 @@
         </div>
     </section>
 @stop
+@push('script')
+    <script>
+        $(document).ready(function () {
+            $('.item_filter').click(function (e) {
+                max_prices = $('.prices').val();
+                console.log(max_prices);
+                size = multilple_values('size');
+
+                $.ajax({
+                    url: document.URL,
+                    type: 'get',
+                    data: {
+                        price: max_prices,
+                        size: size,
+
+                    },
+                    success: function (result) {
+
+                        $('#filter_id').replaceWith($('#filter_id')).html(result);
+                    }
+                });
+
+
+            });
+
+            $('.item_sort').change(function (e) {
+                var val = $(this).find(':checked').val();
+                console.log(val);
+
+                $.ajax({
+                    url: document.URL,
+                    type: 'get',
+                    data: {
+                        value: val,
+                    },
+                    success: function (result) {
+                        $('#filter_id').replaceWith($('#filter_id')).html(result);
+                    }
+                });
+
+            })
+        });
+
+
+        function multilple_values(inputclass) {
+            var val = new Array();
+            $("." + inputclass + ":checked").each(function () {
+                val.push($(this).val());
+            });
+            return val;
+
+        }
+    </script>
+
+@endpush

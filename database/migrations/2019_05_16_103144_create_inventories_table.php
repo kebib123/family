@@ -16,7 +16,7 @@ class CreateInventoriesTable extends Migration
         Schema::create('inventories', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('product_id')->unsigned();
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->string('sku');
             $table->string('quantity');
             $table->boolean('stock_availability')->default('0');

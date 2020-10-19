@@ -7,10 +7,12 @@ use App\Model\Contact;
 use App\Model\ContactForm;
 use App\Model\Faq;
 use App\Model\Media;
+use App\Model\Subscriber;
 use App\Model\User;
 use Cocur\Slugify\Bridge\Twig\SlugifyExtension;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 
 class InformationController extends BackendController
@@ -197,28 +199,6 @@ class InformationController extends BackendController
         return view($this->backendPagePath . 'reply', $this->data);
     }
 
-    public function add_user(Request $request)
-    {
-        if ($request->isMethod('post')) {
-            $request->validate([
-                'name' => 'required',
-                'email' => 'required',
-                'phone' => 'required',
-                'password' => 'required'
-            ]);
-            $data['name'] = $request->name;
-            $data['email'] = $request->email;
-            $data['phone'] = $request->phone;
-            $data['password'] = bcrypt($request->password);
-            $data['roles'] = 'user';
-
-            if (User::create($data)) {
-                Session::flash('success', 'successfully registered');
-                return redirect()->back();
-            }
-        }
-    }
-
     public function show_user(Request $request)
     {
         if ($request->isMethod('get')) {
@@ -240,6 +220,37 @@ class InformationController extends BackendController
             Session::flash('success', 'User deleted successfully');
             return redirect()->back();
         }
+    }
+
+    public function show_subscriber(Request $request)
+    {
+        if ($request->isMethod('get')) {
+            $email=Subscriber::all();
+            $this->data('email',$email);
+            return view($this->backendPagePath . 'show_subscriber',$this->data);
+        }
+        if ($request->isMethod('post')) {
+            $request->validate([
+                'email' => 'required|unique:subscribers,email'
+
+            ]);
+
+            $data['email'] = $request->email;
+            $create = Subscriber::create($data);
+            if ($create) {
+                Mail::send(new \App\Mail\Subscription());
+
+                Session::flash('success', 'You have subscribed to DXN');
+                return redirect()->back();
+            }
+        }
+    }
+    public function reply_subscriber(Request $request)
+    {
+        $id=$request->id;
+        $email=Subscriber::where('id','=',$id)->first();
+        $this->data('email',$email);
+        return view($this->backendPagePath . 'reply_subscriber',$this->data);
     }
 }
 

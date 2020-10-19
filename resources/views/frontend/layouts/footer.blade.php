@@ -38,7 +38,6 @@
                     <ul>
                         <li class="footer_list--item"><a href="{{route('contact')}}">contact us</a></li>
                         <li class="footer_list--item"><a href="{{route('about')}}">about us</a></li>
-                        <li class="footer_list--item"><a href="">details</a></li>
                         <li class="footer_list--item"><a href="{{route('faq')}}">faq</a></li>
                     </ul>
                 </div>
@@ -50,8 +49,10 @@
                     </div>
                 </div>
                 <div class="footer_list ">
-                    <form action="" class="d-flex pb-3 mb-3"><input type="email" class="uk-input">
-                        <button class="checkout uk-button">Join</button>
+                    <form action="{{route('show-subscriber')}}" class="d-flex pb-3 mb-3" method="post">
+                        @csrf
+                        <input type="email" name="email" class="uk-input">
+                        <button class="checkout uk-button" type="submit">Join</button>
                     </form>
                 </div>
                 <div class="footer_title">
@@ -60,7 +61,7 @@
                     </div>
                 </div>
                 <div class="footer_list">
-                    {!!$about->last()->about  !!}
+                {!! \Illuminate\Support\Str::words($about->last()->about,'40') !!}
 
                 </div>
             </div>
@@ -99,14 +100,13 @@
 
 <script src="{{url('js/app.min.js')}}"></script>
 <script src="{{url('js/custom.js')}}"></script>
-@stack('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 <script>
     @if(\Illuminate\Support\Facades\Session::has('success'))
-    toastr.success("{{Session::get('success')}}");
+    toastr.success("{{\Illuminate\Support\Facades\Session::get('success')}}");
     @endif
     @if(\Illuminate\Support\Facades\Session::has('error'))
-    toastr.error("{{Session::get('error')}}");
+    toastr.error("{{\Illuminate\Support\Facades\Session::get('error')}}");
     @endif
 
 </script>

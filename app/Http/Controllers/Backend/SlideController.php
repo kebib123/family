@@ -104,7 +104,6 @@ class SlideController extends BackendController
             $id=$request->id;
             $request->validate([
                 'slide_name'=>'required',
-                'image'=>'required',
                 'status'=>'required',
                 'section'=>'required',
                 'link'=>'required'

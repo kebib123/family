@@ -1,6 +1,5 @@
 @extends('frontend.master.master')
 @section('content')
-
     <!-- The whole page content goes here -->
     <!--  login section -->
     <section id="form_login">
@@ -32,7 +31,7 @@
                 <div class="form-row">
                     <button type="submit" class="uk-button view-cart center">Log in</button>
                 </div>
-                <a href="forget.html" class="form-forgotten-password">Forgotten password &middot;</a>
+                <a href="{{route('forgot')}}" class="form-forgotten-password">Forgotten password &middot;</a>
                 <a href="{{route('register')}}" class="form-create-an-account">Create an account &rarr;</a>
 
             </div>
@@ -46,9 +45,8 @@
                 <span class="form-title">Sign in with</span>
             </div>
 
-            <a href="#" class="form-google-button">Google</a>
-            <a href="#" class="form-facebook-button">Facebook</a>
-            <a href="#" class="form-twitter-button">Twitter</a>
+            <a href="{{route('gmail-signin','google')}}" class="form-google-button">Google</a>
+            <a href="{{ url('/login/facebook') }}" class="form-facebook-button">Facebook</a>
 
         </div>
 
@@ -56,7 +54,6 @@
 
 </section>
     <!-- footer -->
-
 
 
 @endsection

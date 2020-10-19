@@ -5,7 +5,7 @@ $route=\Illuminate\Support\Facades\Route::currentRouteName();
 
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="#" class="brand-link">
+    <a href="{{route('home')}}" class="brand-link">
         <img src="https://1.bp.blogspot.com/-_nSlo7Y9SWU/WZb5C7z9_pI/AAAAAAAAA20/ET-P9Q6ymtAK_9eXbBe3_oXOz_LySclIgCK4BGAYYCw/s1600/logo-sec%2Bcopy1.png" class="brand-image  elevation-3"
              style="opacity: .8">
         <span class="brand-text font-weight-light">DXN</span>
@@ -128,29 +128,6 @@ $route=\Illuminate\Support\Facades\Route::currentRouteName();
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item has-treeview menu">
-                    <a href="#" class="nav-link ">
-                        <i class="nav-icon fa fa-shopping-cart"></i>
-                        <p>
-                            Cart
-                            <i class="right fa fa-angle-left"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                                <p>Add Category</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fa fa-circle-o nav-icon"></i>
-                                <p>View Categories</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
                 <li class="nav-item has-treeview menu{{$route=='show-contact'||$route=='add-contact'?'-open':''}}">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fa fa-phone"></i>
@@ -176,9 +153,9 @@ $route=\Illuminate\Support\Facades\Route::currentRouteName();
                 </li>
                 <li class="nav-item has-treeview menu">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon fa fa-check"></i>
+                        <i class="nav-icon fa fa-shopping-cart"></i>
                         <p>
-                            Checkout
+                            Cart
                             <i class="right fa fa-angle-left"></i>
                         </p>
                     </a>
@@ -187,6 +164,12 @@ $route=\Illuminate\Support\Facades\Route::currentRouteName();
                             <a href="{{route('show-order')}}" class="nav-link">
                                 <i class="fa fa-shopping-cart"></i>
                                 <p>View Orders</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{route('charges')}}" class="nav-link">
+                                <i class="fa fa-dollar-sign"></i>
+                                <p>Extra Charges</p>
                             </a>
                         </li>
                     </ul>
@@ -202,13 +185,13 @@ $route=\Illuminate\Support\Facades\Route::currentRouteName();
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{route('add-faq')}}" class="nav-link {{$route=='add-faq'?'active':null}}">
-                                <i class="fa fa-circle-o nav-icon"></i>
+                                <i class="fa fa-question-circle"></i>
                                 <p>Add Faq</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{route('show-faq')}}" class="nav-link {{$route=='show-faq'?'active':null}}">
-                                <i class="fa fa-circle-o nav-icon"></i>
+                                <i class="fa fa-store"></i>
                                 <p>View Faq</p>
                             </a>
                         </li>
@@ -225,7 +208,7 @@ $route=\Illuminate\Support\Facades\Route::currentRouteName();
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
                             <a href="{{route('add-media')}}" class="nav-link {{$route=='add-media'?'active':null}}">
-                                <i class="fa fa-circle-o nav-icon"></i>
+                                <i class="fa fa-wrench"></i>
                                 <p>Update Media</p>
                             </a>
                         </li>
@@ -247,14 +230,30 @@ $route=\Illuminate\Support\Facades\Route::currentRouteName();
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="fa fa-user"></i>
-                                <p>Active Users</p>
+                            <a href="{{route('show-subscriber')}}" class="nav-link {{$route=='show-user'?'active':null}}">
+                                <i class="fa fa-user-check"></i>
+                                <p>Subscribers</p>
                             </a>
                         </li>
                     </ul>
                 </li>
-
+                <li class="nav-item has-treeview menu{{$route=='show-user'?'-open':null}}">
+                    <a href="#" class="nav-link active">
+                        <i class="nav-icon fa fa-fire"></i>
+                        <p>
+                            Deals
+                            <i class="right fa fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{route('deal-products')}}" class="nav-link">
+                                <i class="fa fa-th-list"></i>
+                                <p>Deal Products</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
                 <li class="nav-item">
                     <a href="{{route('signin')}}" class="nav-link">

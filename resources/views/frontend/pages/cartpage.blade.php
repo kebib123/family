@@ -26,22 +26,21 @@
                                 <img src="{{url('images/products/'.$value->options->image)}}">
                             </div>
                             <div class="product-details">
-                                <div class="product-title">{{$value->name}}</div>
+                                <div class="product-title" id="item_name">{{$value->name}}</div>
                                 <p class="product-description">{!! $value->options->description !!}</p>
                             </div>
-                            <div class="product-price">{{$value->price}}</div>
+                            <div class="product-price" id="prc">{{$value->price}}</div>
                             <div class="product-quantity">
-                                <input type="number" name="quantity[]" class="form-control"
+                                <input type="number" name="quantity[]" class="form-control" id="qty"
                                        value="{{$value->qty}}" min="1">
                             </div>
-
                             <div class="product-removal">
                                 <a href="{{route('cart-destroy',$value->rowId)}}"
                                    class=" btn btn-danger remove-product ">
                                     <i class="fa fa-trash"></i>
                                 </a>
                             </div>
-                            <div class="product-line-price"></div>
+                            <div class="product-line-price" id="total">{{$value->price*$value->qty}}</div>
                         </div>
 
                     @endforeach
@@ -52,19 +51,22 @@
                 <div class="totals">
                     <div class="totals-item">
                         <label>Subtotal</label>
-                        <div class="totals-value" id="cart-subtotal"></div>
+                        <div class="totals-value"
+                             id="cart-subtotal">{{\Gloudemans\Shoppingcart\Facades\Cart::subtotal()}}</div>
                     </div>
                     <div class="totals-item">
                         <label>Tax (13%)</label>
-                        <div class="totals-value" id="cart-tax"></div>
+                        <div class="totals-value" id="cart-tax">{{($charge->first()->tax)/100*$final}}</div>
+
                     </div>
                     <div class="totals-item">
                         <label>Shipping</label>
-                        <div class="totals-value" id="cart-shipping"></div>
+                        <div class="totals-value" id="cart-shipping">@if(Cart::content()->isnotEmpty()){{$charge->first()->shipping_cost}}@endif</div>
                     </div>
                     <div class="totals-item totals-item-total">
                         <label>Grand Total</label>
                         <div class="totals-value" id="cart-total">
+                            @if(Cart::content()->isnotEmpty()){{$final+$charge->first()->shipping_cost+($charge->first()->tax)/100*$final}}@endif
                         </div>
                     </div>
                 </div>
@@ -84,3 +86,88 @@
     </section>
 
 @endsection
+@push('script')
+    <script>
+        $(document).ready(function () {
+
+            /* Set rates + misc */
+            var tax = parseInt('{{$charge->first()->tax}}');
+            var taxRate = tax / 100;
+            var shippingRate = parseInt('{{$charge->first()->shipping_cost}}');
+            console.log(shippingRate);
+            var fadeTime = 300;
+
+
+            /* Assign actions */
+            $('.product-quantity input').change(function () {
+                updateQuantity(this);
+            });
+
+            $('.product-removal button').click(function () {
+                removeItem(this);
+            });
+
+
+            /* Recalculate cart */
+            function recalculateCart() {
+                var subtotal = 0;
+
+                /* Sum up row totals */
+                $('.product').each(function () {
+                    subtotal += parseFloat($(this).children('.product-line-price').text());
+                });
+
+                /* Calculate totals */
+                var tax = subtotal * taxRate;
+                var shipping = (subtotal > 0 ? shippingRate : 0);
+                var total = subtotal + tax + shipping;
+
+                /* Update totals display */
+                $('.totals-value').fadeOut(fadeTime, function () {
+                    $('#cart-subtotal').html(subtotal.toFixed(2));
+                    $('#cart-tax').html(tax.toFixed(2));
+                    $('#cart-shipping').html(shipping.toFixed(2));
+                    $('#cart-total').html(total.toFixed(2));
+                    if (total == 0) {
+                        $('.checkout').fadeOut(fadeTime);
+                    } else {
+                        $('.checkout').fadeIn(fadeTime);
+                    }
+                    $('.totals-value').fadeIn(fadeTime);
+                });
+            }
+
+
+            /* Update quantity */
+            function updateQuantity(quantityInput) {
+                /* Calculate line price */
+                var productRow = $(quantityInput).parent().parent();
+                var price = parseFloat(productRow.children('.product-price').text());
+                var quantity = $(quantityInput).val();
+                var linePrice = price * quantity;
+
+                /* Update line price display and recalc cart totals */
+                productRow.children('.product-line-price').each(function () {
+                    $(this).fadeOut(fadeTime, function () {
+                        $(this).text(linePrice.toFixed(2));
+                        recalculateCart();
+                        $(this).fadeIn(fadeTime);
+                    });
+                });
+            }
+
+
+            /* Remove item from cart */
+            function removeItem(removeButton) {
+                /* Remove row from DOM and recalc cart total */
+                var productRow = $(removeButton).parent().parent();
+                productRow.slideUp(fadeTime, function () {
+                    productRow.remove();
+                    recalculateCart();
+                });
+            }
+
+        });
+
+    </script>
+@endpush

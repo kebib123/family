@@ -1,9 +1,7 @@
-@extends('frontend.master.master')
+{{$category->name}}@extends('frontend.master.master')
 @section('content')
 
     <!-- The whole page content goes here -->
-
-
     <!--  category -->
     <section id="category-filter">
         <div class="container">
@@ -40,7 +38,7 @@
                                                                          placeholder=""
                                                                          style="background-color: #e6191a">100</span>
                                             </p>
-                                            <input id="range" class="item_filter max_price uk-range " type="range" value="2" min="100"
+                                            <input id="range" class="item_filter max_price uk-range " type="range" value="" min="100"
                                                    max="10000" step="1"
                                                    oninput="document.getElementById('rangeValue').innerHTML = this.value">
                                         </form>
@@ -67,8 +65,8 @@
                                         <label><input class="item_filter size uk-checkbox" value="medium" type="checkbox"> Medium</label>
                                         <label><input class="item_filter size uk-checkbox" value="large" type="checkbox"> Large</label>
                                         <label><input class="item_filter size uk-checkbox" value="xl" type="checkbox"> XL</label>
-                                        <label><input class="item_filter size uk-checkbox" value="xxl" type="checkbox"> XXL</label>
-                                        <label><input class="item_filter size uk-checkbox" value="xxxl" type="checkbox"> XXXL</label>
+                                        <label><input class="item_filter size uk-checkbox" value="x-x-l" type="checkbox"> XXL</label>
+                                        <label><input class="item_filter size uk-checkbox" value="x-x-x-l" type="checkbox"> XXXL</label>
 
 
                                     </form>
@@ -94,9 +92,11 @@
                                     <h3>Sort by:</h3>
 
                                 </div>
-                                <select name="" class="item_filter uk-select" style="width: 200px">
-                                    <option selected="selected" value="">All</option>
+                                <select name="" class="item_sort uk-select" style="width: 200px">
+                                    <option selected="selected" value="">--Select--</option>
                                     <option class="newproduct" value="new">New</option>
+                                    <option class="price" value="price">Price</option>
+                                    <option class="newpopular" value="popular">Popular</option>
 
 
                                 </select>
@@ -176,11 +176,6 @@
                 size=multilple_values('size');
                 console.log(size);
                 max_price=$('.max_price').val();
-                newpro=$('.newproduct').val();
-                // console.log(newpro);
-                // newprice=$('.price').val();
-                // newpopular=$('.popular').val();
-
 
                 $.ajax({
                     url: document.URL,
@@ -189,18 +184,32 @@
                         brand: brand,
                         size:size,
                         max_price:max_price,
-                        newprod:newpro
                     },
                     success:function (result) {
-
                         $('#filter_id').replaceWith($('#filter_id')).html(result);
                     }
                 });
 
 
             });
+            $('.item_sort').change(function (e) {
+                var val = $(this).find(':checked').val();
+                console.log(val);
 
+                $.ajax({
+                    url: document.URL,
+                    type: 'get',
+                    data: {
+                        value: val,
+                    },
+                    success: function (result) {
+                        $('#filter_id').replaceWith($('#filter_id')).html(result);
+                    }
+                });
+
+            })
         });
+
 
         function multilple_values(inputclass) {
             var val = new Array();

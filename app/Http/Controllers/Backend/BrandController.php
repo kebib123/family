@@ -52,7 +52,7 @@ return false;
     public function delete_file($id)
     {
         $findData = Brand::findorfail($id);
-        $fileName = $findData->image;
+        $fileName = $findData->brand_image;
         $deletePath = public_path('images/brands/' . $fileName);
         if (file_exists($deletePath) && is_file($deletePath)) {
             unlink($deletePath);
@@ -77,7 +77,6 @@ return false;
             $request->validate([
                 'brand_name'=>'required',
                 'company_name'=>'required',
-                'image'=>'required'
             ]);
             $data['brand_name']=$request->brand_name;
             $data['company_name']=$request->company_name;
@@ -99,4 +98,26 @@ return false;
             }
         }
     }
+    public function brand_status(Request $request)
+    {
+        $id=$request->brand;
+
+        $brand=Brand::findorfail($id);
+
+        if(isset($_POST['active']))
+        {
+            $brand->status=0;
+        }
+        if(isset($_POST['inactive']))
+        {
+            $brand->status=1;
+        }
+        $save=$brand->update();
+        if($save)
+        {
+            Session::flash('success','Status updated');
+            return redirect()->back();
+        }
+    }
+
 }

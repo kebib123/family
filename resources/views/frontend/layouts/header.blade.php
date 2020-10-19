@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>DXN</title>
     <!-- Bootstrap CSS -->
-
+    <meta name="csrf-token" content="{{csrf_token()}}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <!-- font awesome -->
@@ -34,6 +34,7 @@
 
     <!--  google fonts -->
     <link href="https://fonts.googleapis.com/css?family=Karla|Rubik" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     <!-- main css -->
     <link rel="stylesheet" href="{{url('css/app.min.css')}}">
 
@@ -174,36 +175,59 @@
                     <div class="col-md-6 ">
                         <div class="search-box">
                             <div class="uk-margin">
-                                <form class="uk-search uk-search-default ">
-                                    <span class="uk-search-icon-flip" uk-search-icon></span>
-                                    <input class="uk-search-input" type="search" placeholder="Search...">
+                                <form class="uk-search uk-search-default" action="{{route('search-results')}}"
+                                      method="post">
+                                    @csrf
+                                    <div class="input-group">
+                                        <input type="text" name="search" class="form-control" placeholder="Search..">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-secondary" type="submit">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </form>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="users big-screen">
-                            <div class="user-login">
-                                <ul class="user_login_ul">
-                                    <li class="user_login_li relative">
-                                        <a href="{{route('signin')}}" class="user-login-link ">
+                            @if(\Illuminate\Support\Facades\Auth::check())
+                                <div class="user-login">
+                                    <ul class="user_login_ul">
+                                        <li class="user_login_li relative">
+                                            <a href="{{route('account')}}" class="user-login-link ">
                                        <span style="
     background: #e6191b;
     color: white;
     padding: 10px;
-">Login &amp; SignUp</span>
-                                        </a>
-                                        <ul class="user_login_ul sub_ul">
-                                            <li class="sub_li"><a href="account.html">Account</a></li>
-                                            <li class="sub_li"><a href="account.html">Wishlist</a></li>
-                                            <li class="sub_li"><a href="account.html">Order</a></li>
-                                            <li class="sub_li"><a href="account.html">Logout</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
+">{{\Illuminate\Support\Facades\Auth::user()->name}}</span>
+                                            </a>
+                                            <ul class="user_login_ul sub_ul">
+                                                <li class="sub_li"><a href="{{route('account')}}">Account</a></li>
+                                                <li class="sub_li"><a href="{{route('account')}}">Wishlist</a></li>
+                                                <li class="sub_li"><a href="{{route('account')}}">Order</a></li>
+                                                <li class="sub_li"><a href="{{route('logout')}}">Logout</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            @else
+                                <div class="user-login">
+                                    <ul class="user_login_ul">
+                                        <li class="user_login_li relative">
+                                            <a href="{{route('signin')}}" class="user-login-link ">
+                                       <span style="
+    background: #e6191b;
+    color: white;
+    padding: 10px;
+">Login & Signup</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
 
-
-                            </div>
+                            @endif
 
                             <div class="user-cart">
                                 <a href="" class="user-cart-link">
@@ -215,24 +239,26 @@
                                 <div class="user_cart_dd">
                                     <ul class="user_cart_ul">
                                         @foreach(\Gloudemans\Shoppingcart\Facades\Cart::content() as $value)
-                                        <li>
-                                            <figure style="float: left; margin-right: 10px; width: 50px;"><img
-                                                        src="{{url('images/products/'.$value->options->image)}}"
-                                                        alt=""></figure>
-                                            <p class="text-left">
-                                                <span> {{$value->name}}</span><br>
-                                                <span>{{$value->qty}}</span> <span>*</span> <span>{{$value->price}}</span>
+                                            <li>
+                                                <figure style="float: left; margin-right: 10px; width: 50px;"><img
+                                                            src="{{url('images/products/'.$value->options->image)}}"
+                                                            alt=""></figure>
+                                                <p class="text-left">
+                                                    <span> {{$value->name}}</span><br>
+                                                    <span>{{$value->qty}}</span> <span>*</span>
+                                                    <span>{{$value->price}}</span>
 
-                                            </p>
-                                            <div class="clearfix"></div>
-                                            <hr>
-                                        </li>
+                                                </p>
+                                                <div class="clearfix"></div>
+                                                <hr>
+                                            </li>
                                         @endforeach
 
                                     </ul>
                                     <div class="cart_subtotal">
                                         <div class="float-left">Subtotal</div>
-                                        <div class="float-right"><span class=""><span class="">{{\Gloudemans\Shoppingcart\Facades\Cart::subtotal()}}</span></span>
+                                        <div class="float-right"><span class=""><span
+                                                        class="">{{\Gloudemans\Shoppingcart\Facades\Cart::subtotal()}}</span></span>
                                         </div>
                                         <div class="clearfix"></div>
                                         <hr>
@@ -275,16 +301,6 @@
         </div>
     </header>
 
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{session('success')}}
-        </div>
-    @endif
-    @if(session('error'))
-        <div class="alert alert-danger">
-            {{session('error')}}
-        </div>
-    @endif
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -301,64 +317,34 @@
             <button class="uk-offcanvas-close" type="button" uk-close style="color: #ef3e42;"></button>
 
             <section class="mobile-nav">
-                <form class="uk-search uk-search-default">
-                    <button type="button" class="uk-search-icon-flip" uk-search-icon style="top:0;"></button>
-                    <input class="uk-search-input" type="search" placeholder="Search...">
+                <form class="uk-search uk-search-default" action="{{route('search-results')}}" method="post">
+                    @csrf
+                    <button type="submit" class="uk-search-icon-flip" uk-search-icon style="top:0;"></button>
+                    <input class="uk-search-input" name="search" type="search" placeholder="Search...">
                 </form>
+
                 <ul class="metismenu" id="menu">
                     <li class="active">
                         <a href="{{route('home')}}" aria-expanded="true">Home</a>
                     </li>
                     <li>
-                        <a href="category-page.html" aria-expanded="false">Electronics<span class="fa arrow"></span></a>
-                        <ul aria-expanded="false" class="list-levels">
-                            <li><a href="">Item 1</a></li>
-                            <li><a href="">Item 2</a></li>
-                            <li><a href="">Item 3</a></li>
-                            <li><a href="">Item 4</a></li>
-                            <li><a href="">Item 5</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="category-page.html" aria-expanded="false">
-                            Home Appliance<span class="fa arrow"></span>
-                        </a>
-                        <ul aria-expanded="false" class="list-levels">
-                            <li><a href="">kitchen<span class="fa plus-times"></span></a>
-                                <ul aria-expanded="false" class="list-levels">
-                                    <li><a href="?">item 1.3.1</a></li>
-                                    <li><a href="?">item 1.3.2</a></li>
-                                    <li><a href="?">item 1.3.3</a></li>
-                                    <li><a href="?">item 1.3.4</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="?" aria-expanded="false">bed room<span class="fa plus-times"></span></a>
-                                <ul aria-expanded="false" class="list-levels">
-                                    <li><a href="?">item 2.3.1</a></li>
-                                    <li><a href="?">item 2.3.2</a></li>
-                                    <li><a href="?">item 2.3.3</a></li>
-                                    <li><a href="?">item 2.3.4</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="">terrance<span class="fa plus-times"></span></a>
-                                <ul aria-expanded="false" class="list-levels">
-                                    <li><a href="?">item 1.3.1</a></li>
-                                    <li><a href="?">item 1.3.2</a></li>
-                                    <li><a href="?">item 1.3.3</a></li>
-                                    <li><a href="?">item 1.3.4</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="?" aria-expanded="false">Item 3<span class="fa plus-times"></span></a>
-                                <ul aria-expanded="false" class="list-levels">
-                                    <li><a href="?">item 2.3.1</a></li>
-                                    <li><a href="?">item 2.3.2</a></li>
-                                    <li><a href="?">item 2.3.3</a></li>
-                                    <li><a href="?">item 2.3.4</a></li>
-                                </ul>
-                            </li>
-                        </ul>
+                        @foreach($cat as $value)
+
+                            <a href="{{route('all-category')}}" aria-expanded="false">
+                                {{$value->name}}<span class="fa arrow"></span>
+                            </a>
+                            <ul aria-expanded="false" class="list-levels">
+                                @foreach($value->subCategory as $child)
+                                <li><a href="{{route('show-category',$child->id)}}">{{$child->name}}<span class="fa plus-times"></span></a>
+                                    <ul aria-expanded="false" class="list-levels">
+                                        @foreach($child->subCategory as $value2)
+                                        <li><a href="{{route('show-category',$value2->id)}}">{{$value2->name}}</a></li>
+                                            @endforeach
+                                    </ul>
+                                </li>
+@endforeach
+                            </ul>
+                        @endforeach
                     </li>
                     <li>
                         <a href="{{route('about')}}" aria-expanded="false">About us</a>

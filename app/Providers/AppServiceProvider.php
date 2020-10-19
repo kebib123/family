@@ -8,13 +8,17 @@ use App\Model\Category;
 use App\Model\Contact;
 use App\Model\Faq;
 use App\Model\Media;
+use App\Model\Order;
+use App\Model\Product;
 use App\Model\SubCategory;
+use App\Model\User;
 use App\Repositories\Contracts\BrandRepository;
 use App\Repositories\Contracts\CategoryRepository;
 use App\Repositories\Contracts\ProductRepository;
 use App\Repositories\Eloquent\EloquentBrandRepository;
 use App\Repositories\Eloquent\EloquentCategoryRepository;
 use App\Repositories\Eloquent\EloquentProductRepository;
+use Illuminate\Http\Resources\Json\Resource;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
@@ -42,6 +46,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Resource::withoutWrapping();
         Schema::defaultStringLength('191');
 
         $med = Media::all();
@@ -55,6 +60,12 @@ class AppServiceProvider extends ServiceProvider
 
         $brand=Brand::all();
         $this->data('brand',$brand);
+        $order = Order::all();
+        $this->data('order', $order);
+        $user = User::all();
+        $this->data('user', $user);
+        $pro = Product::all();
+        $this->data('product', $pro);
 
 
         View::share($this->data);
